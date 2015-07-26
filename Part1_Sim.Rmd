@@ -1,5 +1,5 @@
 ---
-title: "Statistical Interference Course Project"
+title: "Statistical Interference Course Project Part 1"
 author: "Tjeerd Luykx"
 date: "Monday, July 20, 2015"
 output: html_document
@@ -9,7 +9,7 @@ output: html_document
 
 In this document the exponential distribution in R is investigated and is compared with the Central Limit Theorem. The exponential distribution can be simulated in R with ```rexp(n, lambda)``` where ```lambda``` is the rate parameter. The mean of exponential distribution is ```1/lambda``` and the standard deviation is also ```1/lambda```. ```lambda = 0.2``` is set for all of the simulations. The distribution of averages of 40 exponentials is investigated. Note that a thousand simulations will be done in this project.
 
-The document is created for the Coursera Statistical Interference course. As stated in the course project requirements, the document aims to give an answer to the following:
+The document is created for the Coursera Statistical Interference course Part 1. As stated in the course project requirements, the document aims to give an answer to the following:
 
 > Illustrate via simulation and associated explanatory text the properties of the distribution of the mean of 40 exponentials. You should:
 > 1. Show the sample mean and compare it to the theoretical mean of the distribution.
@@ -20,7 +20,7 @@ The document is created for the Coursera Statistical Interference course. As sta
 
 In the code chunk below the simulation method is defined. Constants are assigned and the seed is set to create reproducibility. The histogram displays the exponential distribution. 
 
-```{r, message=FALSE}
+```{r, message=FALSE, warning=FALSE}
 library(ggplot2)
 
 # Assign constants of lamda, number of tests and number of sims

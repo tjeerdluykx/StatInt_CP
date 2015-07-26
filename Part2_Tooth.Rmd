@@ -1,0 +1,92 @@
+---
+title: "Statistical Interference Course Project Part 2"
+author: "Tjeerd Luykx"
+date: "Sunday, July 26, 2015"
+output: html_document
+---
+
+## 1. Overview:
+
+In this document the ```ToothGrowth``` dataset of R is analyzed. The ```Toothgrowth``` dataset contains information about the length of odontoblasts (teeth) in each of 10 guinea pigs at each of three dose levels of Vitamin C (0.5, 1, and 2 mg). The three dose levels are retrieved by two delivery methods: orange juice (OJ) or ascorbic acid (VJ). This report consists of conducting basic exploratory data analysis on the dataset and providing statistical information on the hypothesis test. 
+
+The ```ToothGrowth``` data set consists of 60 observations of 3 variables:
+
+```len```: Tooth length in millimeters (numeric variable)
+```supp```: Supplement type (factor variable with levels VC and OJ)
+```dose```: Dose in milligrams (numeric variable)
+
+The document is created for the Coursera Statistical Interference course Part 2. As stated in the course project requirements, the document aims to give an answer to the following:
+
+> Did you  perform an exploratory data analysis of at least a single plot or table highlighting basic features of the data?
+> Did the student perform some relevant confidence intervals and/or tests?
+> Were the results of the tests and/or intervals interpreted in the context of the problem correctly?
+> Did the student describe the assumptions needed for their conclusions?
+
+## 2. Exploratory Data Analysis:
+
+In the code chunk below the ```ToothGrowth``` dataset is loaded. The mean and standard deviation of the tooth length variable are calculated. This does not give insight in to the cause of different length size. In order to discover the relationship between the length variable and the dose and supplement variables boxplots are displayed.
+
+```{r, message=FALSE, cache=TRUE}
+library(datasets)
+data(ToothGrowth)
+
+round(mean(ToothGrowth$len),3)
+round(sd(ToothGrowth$len),3)
+
+library(ggplot2)
+
+ggplot(data = ToothGrowth, aes(supp, len)) + 
+  geom_boxplot() +
+  xlab('Supplement Type') +
+  ylab('Tooth Length (mm)') +
+  ggtitle('Tooth length By Supplement Type')
+
+ggplot(data = ToothGrowth, aes(as.factor(dose), len)) + 
+  geom_boxplot() +
+  xlab('Dose (mg)') +
+  ylab('Tooth Length (mm)') +
+  ggtitle('Tooth length By Dose Level')
+```
+
+The first boxplot displays the difference in length between the two different supplement types. Guinea pigs that were supplementend with orange juice have an average higher tooth length than the guinea pigs that were supplemented by ascorbic acid. The second boxplot displays the relationship between dose level and tooth length. A higher dose level is correlated with a higher average tooth length. 
+
+## 3. Hypothesis Testing:
+
+Due to the small size of the test sample a t distrbution is used during hypothesis testing. The assumptions for a t distribution are addressed as the following:
+
+1. The data has independent and identically distributed variables
+2. Data is roughly symmetric and population is normally distributed. 
+3. For large degrees of freedom, t quantiles become the same as standard normal quantiles. 
+
+### 3.1 Supplement Type
+
+The hypothesis test is formulated for a differing average tooth length in relationship to a different supplement type as being statistically different from zero. For this t test it assumed that variance is not equal. 
+
+```{r, message=FALSE, warning=FALSE}
+T_TestSupp <- t.test(len ~ supp, ToothGrowth, var.equal = FALSE)
+T_TestSupp
+```
+
+The p value is larger than the statistically significant value of 0.05. In that case, we fail to reject the null hypothesis. Therefore the data does not constitute enough indication that the average length is not different for each supplement type. Also, for this t-test also the confidence interval includes a 0 value. 
+
+### 3.1 Dose Level
+
+The hypothesis test is formulated for a differing average tooth length in relationship to a different dose level as being statistically different from zero. Because of the three different dose levels, three different t-tests are applied and compared with each other. For all cases, the null hypothesis is 0 for a difference in tooth length.
+
+```{r}
+Dose2to1 <- t.test(ToothGrowth$len[ToothGrowth$dose == 2],ToothGrowth$len[ToothGrowth$dose == 1])
+Dose2to0.5 <- t.test(ToothGrowth$len[ToothGrowth$dose == 2],ToothGrowth$len[ToothGrowth$dose == 0.5])
+Dose1to0.5 <- t.test(ToothGrowth$len[ToothGrowth$dose == 2],ToothGrowth$len[ToothGrowth$dose == 0.5])
+
+Dose2to1
+Dose2to0.5
+Dose1to0.5
+```
+
+For all three cases, the p-value is lower than the significant value of 0.05. For all cases we are able to reject the null. Therefore, the data provides sufficient evidence that average tooth length is different for each dose level. 
+
+## 4. Conclusion:
+
+1. The difference of average tooth length for each of the two supplement types in the guinea pigs sample is statiscally not different from 0. 
+2. The difference of average tooth length for each of the three dose levels in the guinea pigs sample is statiscally different from 0.  
+
